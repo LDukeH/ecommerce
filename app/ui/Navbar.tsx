@@ -4,17 +4,28 @@ import Image from "next/image";
 import { useState } from "react";
 import useCartStore from "@/store/cartStore";
 import DeleteIcon from "@/public/icon-delete.svg";
-import { clear } from "console";
+import SideMenu from "./SideMenu";
+import MenuIcon from "@/public/icon-menu.svg";
+import useModalStore from "@/store/modalStore";
+import { AnimatePresence } from "motion/react";
+import { motion } from "framer-motion";
 
 function Cart() {
   const { cart, deleteFromCart, clearCart } = useCartStore();
 
   return (
-    <div className="rounded-lg w-92  absolute top-20 bg-white z-50 border-gray-300 shadow-xl">
+    <motion.div
+      initial={{ opacity: 0, y: -200 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -200 }}
+      transition={{ duration: 0.3, ease: "easeInOut", type: "keyframes" }}
+      key="cart"
+      className="rounded-lg w-92  absolute top-20 bg-white z-10 border-gray-300 shadow-xl"
+    >
       <div className="font-bold p-4">Cart</div>
       <div className="w-full h-2 border-b-2 border-gray-300"></div>
 
-      <div className="min-h-48">
+      <div className="min-h-96 mobile:min-h-48 text-xl mobile:text-base">
         {cart.length > 0 ? (
           <div>
             {cart.map((item, index) => (
@@ -69,13 +80,14 @@ function Cart() {
           </div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }
 
 export default function Navbar() {
   const [openCart, setOpenCart] = useState(false);
   const { cart } = useCartStore();
+  const { isSideMenuOpen, openSideMenu } = useModalStore();
 
   const cartCount = cart.reduce(
     (total, item) => total + item.quantity! || 0,
@@ -84,8 +96,12 @@ export default function Navbar() {
 
   return (
     <div>
-      <div className="w-3/4 h-24 border-b-gray-100 border-b-2 flex items-center mx-auto">
-        <div className="relative h-5 w-35 mr-18 cursor-pointer">
+      <AnimatePresence>{isSideMenuOpen && <SideMenu />}</AnimatePresence>
+      <div className="w-full mobile:w-3/4 gap-6 pl-8 h-24 border-b-gray-100 border-b-2 flex items-center mx-auto ">
+        <div className="mobile:hidden" onClick={openSideMenu}>
+          <MenuIcon />
+        </div>
+        <div className="relative h-8 w-108 mobile:w-48 mr-18 cursor-pointer">
           <Image
             src={"./logo.svg"}
             alt="Logo"
@@ -104,14 +120,14 @@ export default function Navbar() {
         </div>
 
         {/* avatar and cart */}
-        <div className="ml-auto flex items-center gap-8 w-full justify-end ">
-          {openCart && <Cart />}
+        <div className="flex items-center gap-8 w-full justify-end">
+          <AnimatePresence> {openCart && <Cart />}</AnimatePresence>
           <button
-            className="relative h-6 w-6 transition-all duration-300 cursor-pointer hover:opacity-70 focus:outline-none focus:ring-2 focus:ring-orange-500 rounded-full"
+            className="relative mobile:h-6 mobile:w-6 h-10 w-10 transition-all duration-300 cursor-pointer hover:opacity-70 focus:outline-none focus:ring-2 focus:ring-orange-500 rounded-full"
             onClick={() => setOpenCart(!openCart)}
           >
             {cartCount > 0 && (
-              <div className="absolute bg-orange-500 h-1/2 -right-1 -top-1 z-10 text-white text-xs font-bold w-4.5 flex items-center justify-center rounded-2xl">
+              <div className="absolute bg-orange-500 mobile:-right-1 -right-5 mobile:-top-1 -top-1.5 z-10 text-white text-lg font-bold mobile:h-1/2 h-3/4 w-9 mobile:w-4.5 mobile:text-xs flex items-center justify-center rounded-3xl">
                 {cartCount}
               </div>
             )}
@@ -123,7 +139,7 @@ export default function Navbar() {
             />
           </button>
 
-          <div className="relative h-12 w-12 rounded-full mr-12 border-2 border-transparent hover:border-orange-500 cursor-pointer overflow-hidden transition-all duration-300">
+          <div className="relative mobile:h-12 mobile:w-12 h-14 w-14 rounded-full mr-12 border-2 border-transparent hover:border-orange-500 cursor-pointer overflow-hidden transition-all duration-300">
             <Image
               src={"/image-avatar.png"}
               alt="Avatar"

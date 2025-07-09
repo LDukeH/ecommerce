@@ -1,8 +1,8 @@
 "use client";
 
-import Navbar from "./Navbar";
-import Product from "./Product";
-import Modal from "./Modal";
+import Navbar from "./ui/Navbar";
+import Product from "./ui/Product";
+import Modal from "./ui/Modal";
 
 import useModalStore from "@/store/modalStore";
 
