@@ -3,6 +3,12 @@ import "./globals.css";
 
 import kumbhSans from "./font";
 
+export const metadata: Metadata = {
+  title: "E-commerce App",
+  description: "An e-commerce application built with Next.js",
+  icons: { icon: "/favicon.ico" },
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
