@@ -24,7 +24,7 @@ export default function SideMenu() {
         exit={{ x: -300 }}
         transition={{ duration: 0.3 }}
       >
-        <Sidebar className="z-30 h-screen font-bold bg-white text-4xl flex">
+        <Sidebar className="z-30 h-screen font-bold bg-gray-50 text-4xl flex">
           <div className="p-8 w-fit" onClick={closeSideMenu}>
             <CloseIcon />
           </div>
